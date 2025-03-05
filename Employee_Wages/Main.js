@@ -2,13 +2,9 @@
 const WAGE_PER_HOUR = 20;
 const PART_TIME_HOURS = 4;
 const FULL_TIME_HOURS = 8;
-const WORKING_DAYS_IN_MONTH = 20;
+const MAX_WORKING_DAYS = 20;
+const MAX_WORKING_HOURS = 160;
 
-/**
- * Function to get work hours based on employee type
- * @param {number} empCheck - Random number (0, 1, or 2)
- * @returns {number} - Work hours (0, 4, or 8)
- */
 function getWorkHours(empCheck) {
     switch (empCheck) {
         case 1:
@@ -20,18 +16,30 @@ function getWorkHours(empCheck) {
     }
 }
 
-// Variable to store total monthly wage
-let totalMonthlyWage = 0;
+// Variables to track total work and wage
+let totalWorkHours = 0;
+let totalWorkDays = 0;
+let totalWage = 0;
 
-// Loop through 20 working days
-for (let day = 1; day <= WORKING_DAYS_IN_MONTH; day++) {
+// Loop until max conditions are met
+while (totalWorkDays < MAX_WORKING_DAYS && totalWorkHours < MAX_WORKING_HOURS) {
     let empCheck = Math.floor(Math.random() * 3); // Randomly 0, 1, or 2
     let empHours = getWorkHours(empCheck);
-    let dailyWage = empHours * WAGE_PER_HOUR;
-    totalMonthlyWage += dailyWage;
 
-    console.log(`Day ${day}: Work Hours = ${empHours}, Daily Wage = $${dailyWage}`);
+    // Ensure we do not exceed MAX_WORKING_HOURS
+    if (totalWorkHours + empHours > MAX_WORKING_HOURS) {
+        empHours = MAX_WORKING_HOURS - totalWorkHours;
+    }
+
+    let dailyWage = empHours * WAGE_PER_HOUR;
+    totalWage += dailyWage;
+    totalWorkHours += empHours;
+    totalWorkDays++;
+
+    console.log(`Day ${totalWorkDays}: Work Hours = ${empHours}, Daily Wage = $${dailyWage}`);
 }
 
-// Output Monthly Wage
-console.log("\nTotal Monthly Wage: $" + totalMonthlyWage);
+// Output Final Wage and Work Summary
+console.log("\nTotal Working Days:", totalWorkDays);
+console.log("Total Working Hours:", totalWorkHours);
+console.log("Total Monthly Wage: $" + totalWage);
