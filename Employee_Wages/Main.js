@@ -5,6 +5,7 @@ const FULL_TIME_HOURS = 8;
 const MAX_WORKING_DAYS = 20;
 const MAX_WORKING_HOURS = 160;
 
+
 function getWorkHours(empCheck) {
     switch (empCheck) {
         case 1:
@@ -20,6 +21,7 @@ function getWorkHours(empCheck) {
 let totalWorkHours = 0;
 let totalWorkDays = 0;
 let totalWage = 0;
+let dailyWages = []; // Array to store daily wages
 
 // Loop until max conditions are met
 while (totalWorkDays < MAX_WORKING_DAYS && totalWorkHours < MAX_WORKING_HOURS) {
@@ -36,6 +38,9 @@ while (totalWorkDays < MAX_WORKING_DAYS && totalWorkHours < MAX_WORKING_HOURS) {
     totalWorkHours += empHours;
     totalWorkDays++;
 
+    // Store daily wage in the array
+    dailyWages.push({ day: totalWorkDays, wage: dailyWage });
+
     console.log(`Day ${totalWorkDays}: Work Hours = ${empHours}, Daily Wage = $${dailyWage}`);
 }
 
@@ -43,3 +48,7 @@ while (totalWorkDays < MAX_WORKING_DAYS && totalWorkHours < MAX_WORKING_HOURS) {
 console.log("\nTotal Working Days:", totalWorkDays);
 console.log("Total Working Hours:", totalWorkHours);
 console.log("Total Monthly Wage: $" + totalWage);
+
+// Print stored daily wages
+console.log("\nDaily Wages Breakdown:");
+console.table(dailyWages);
