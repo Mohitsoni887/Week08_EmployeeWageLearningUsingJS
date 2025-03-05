@@ -5,7 +5,6 @@ const FULL_TIME_HOURS = 8;
 const MAX_WORKING_DAYS = 20;
 const MAX_WORKING_HOURS = 160;
 
-
 function getWorkHours(empCheck) {
     switch (empCheck) {
         case 1:
@@ -20,7 +19,6 @@ function getWorkHours(empCheck) {
 // Variables to track total work and wage
 let totalWorkHours = 0;
 let totalWorkDays = 0;
-let totalWage = 0;
 let dailyWages = []; // Array to store daily wages
 
 // Loop until max conditions are met
@@ -34,21 +32,37 @@ while (totalWorkDays < MAX_WORKING_DAYS && totalWorkHours < MAX_WORKING_HOURS) {
     }
 
     let dailyWage = empHours * WAGE_PER_HOUR;
-    totalWage += dailyWage;
     totalWorkHours += empHours;
     totalWorkDays++;
 
     // Store daily wage in the array
-    dailyWages.push({ day: totalWorkDays, wage: dailyWage });
-
-    console.log(`Day ${totalWorkDays}: Work Hours = ${empHours}, Daily Wage = $${dailyWage}`);
+    dailyWages.push({ day: totalWorkDays, hours: empHours, wage: dailyWage });
 }
 
-// Output Final Wage and Work Summary
-console.log("\nTotal Working Days:", totalWorkDays);
-console.log("Total Working Hours:", totalWorkHours);
-console.log("Total Monthly Wage: $" + totalWage);
+//  (a) Calculate Total Wage using reduce()
+const totalWage = dailyWages.reduce((acc, day) => acc + day.wage, 0);
+console.log("\nTotal Monthly Wage: $" + totalWage);
 
-// Print stored daily wages
-console.log("\nDaily Wages Breakdown:");
-console.table(dailyWages);
+//  (b) Show Day along with Daily Wage using map()
+const dailyWageMap = dailyWages.map(day => `Day ${day.day}: Wage = $${day.wage}`);
+console.log("\nDaily Wages Breakdown:\n", dailyWageMap.join("\n"));
+
+//  (c) Show Days when Full-Time Wage (160) was earned using filter()
+const fullTimeDays = dailyWages.filter(day => day.wage === 160).map(day => day.day);
+console.log("\nDays with Full-Time Wage (160$):", fullTimeDays);
+
+//  (d) Find the first occurrence when Full-Time Wage was earned using find()
+const firstFullTimeDay = dailyWages.find(day => day.wage === 160);
+console.log("\nFirst Day Full-Time Wage Earned:", firstFullTimeDay ? firstFullTimeDay.day : "Never");
+
+//  (e) Check if Every Element of Full Time Wage is truly holding Full time wage
+const allFullTime = dailyWages.every(day => day.wage === 160);
+console.log("\nIs Every Day a Full-Time Wage? ", allFullTime);
+
+//  (f) Check if there is any Part-Time Wage using some()
+const hasPartTime = dailyWages.some(day => day.wage === 80);
+console.log("\nIs There Any Part-Time Wage? ", hasPartTime);
+
+//  (g) Find the Number of Days the Employee Worked using reduce()
+const daysWorked = dailyWages.reduce((count, day) => (day.hours > 0 ? count + 1 : count), 0);
+console.log("\nTotal Days Employee Worked:", daysWorked);
